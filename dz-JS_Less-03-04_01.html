@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Урок 3-4. Задание-1 by Taras Semeniuk</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- =========== МЫ ЭТОТ БЛОК СОБИРАЕМ JS =============
+
+<h3>Тест по программированию</h3>
+<p id='by'>by Taras Semeniuk</p>
+
+<form action="action_page.php" method="get">
+
+	<ol class="ul-main">
+		<li>Вопрос №1</li>
+				<ul class="ul-main">
+					<li><input type="radio" name="rr1" id="rd1" value="v1"><label for="rd1">Вариант ответа №1</label></li>
+					<li><input type="radio" name="rr1" id="rd2" value="v2"><label for="rd2">Вариант ответа №2</label></li>
+					<li><input type="radio" name="rr1" id="rd3" value="v3"><label for="rd3">Вариант ответа №3</label></li>
+				</ul>
+		<li>Вопрос №2</li>
+		<li>Вопрос №3</li>
+	</ol>
+
+	<input class="btn" type="submit" value="Проверить мои результаты">
+</form> 
+
+-->
+
+<script>
+
+/* ========================= 
+Data format: 
+	01-tag, 
+	02-text value, 
+	03/04-parameter/value 
+	or 
+	03-reference to child 
+============================ */
+
+var lab1=['label','Вариант ответа №1', 'for','rd1'];
+var lab2=['label','Вариант ответа №2', 'for','rd2'];
+var lab3=['label','Вариант ответа №3', 'for','rd3'];
+
+var inp1=['input','', 'id', 'rd1', 'name','nn1', 'type', 'radio', 'value','v1'];
+var inp2=['input','', 'id', 'rd2', 'name','nn1', 'type', 'radio', 'value','v2'];
+var inp3=['input','', 'id', 'rd3', 'name','nn1', 'type', 'radio', 'value','v3'];
+
+
+var lab4=['label','Вариант ответа №1', 'for','rd4'];
+var lab5=['label','Вариант ответа №2', 'for','rd5'];
+var lab6=['label','Вариант ответа №3', 'for','rd6'];
+
+var inp4=['input','', 'id', 'rd4', 'name','nn2', 'type', 'radio', 'value','v4'];
+var inp5=['input','', 'id', 'rd5', 'name','nn2', 'type', 'radio', 'value','v5'];
+var inp6=['input','', 'id', 'rd6', 'name','nn2', 'type', 'radio', 'value','v6'];
+
+
+var lab7=['label','Вариант ответа №1', 'for','rd7'];
+var lab8=['label','Вариант ответа №2', 'for','rd8'];
+var lab9=['label','Вариант ответа №3', 'for','rd9'];
+
+var inp7=['input','', 'id', 'rd7', 'name','nn3', 'type', 'radio', 'value','v7'];
+var inp8=['input','', 'id', 'rd8', 'name','nn3', 'type', 'radio', 'value','v8'];
+var inp9=['input','', 'id', 'rd9', 'name','nn3', 'type', 'radio', 'value','v9'];
+
+
+var li21=['li','', inp1, lab1];
+var li22=['li','', inp2, lab2];
+var li23=['li','', inp3, lab3];
+
+var li24=['li','', inp4, lab4];
+var li25=['li','', inp5, lab5];
+var li26=['li','', inp6, lab6];
+
+var li27=['li','', inp7, lab7];
+var li28=['li','', inp8, lab8];
+var li29=['li','', inp9, lab9];
+
+
+var ul1=['ul','', 'class','ul-main', li21, li22, li23];
+var ul2=['ul','', 'class','ul-main', li24, li25, li26];
+var ul3=['ul','', 'class','ul-main', li27, li28, li29];
+
+var li01=['li','Вопрос №1', 'class', 'li-main', ul1];
+var li02=['li','Вопрос №2', 'class', 'li-main', ul2];
+var li03=['li','Вопрос №3', 'class', 'li-main', ul3];
+
+var ol1=['ol','', 'class','ol-main', li01, li02, li03];
+var btn1=['input','', 'class','btn', 'type','submit', 'value','Проверить мои результаты'];
+
+var form1=['form','', 'action','action_page.php', 'method','get', ol1, btn1];
+
+var head=['h3', 'Тест по программированию'];
+var by1=['p', 'by Taras Semeniuk', 'id', 'by']
+
+var rootDiv=['div', head, by1, form1];
+
+
+/*  ================   ================ */
+
+var strAdr = setTag(rootDiv);			// PARSE IT !!!
+// console.log('===================== FINAL:', strAdr);
+document.body.appendChild(strAdr);
+
+
+
+function setTag(str){
+									// console.log('input array=', str);
+	var i = 0;
+	var tg = document.createElement(str[i]);			//create tag
+	i++;
+
+	if ( typeof str[i] == 'string' ) { 
+		var chld = document.createTextNode(str[i]);    //create child
+	}
+	else{
+									// debugger;
+									// console.log('AHTUNG-1 Enter with:', str[i]);
+		var chld = setTag(str[i]); 
+	}
+									// console.log('gonna add this:', chld)
+	tg.appendChild(chld);
+	i++;
+									// console.log('before Loop i=' + i + '  current tag=', tg);
+	while(i < str.length) {
+									// console.log('in loop before! i='+i, '  length=', str.length );
+		if ( typeof str[i] == 'string' ){			// attribute or address?
+			tg.setAttribute(str[i], str[(i+1)]);	// add attribute
+			tg.appendChild(chld);
+			i+=2;
+		}
+		else{
+			// debugger;
+									// console.log('AHTUNG-2 Enter with:', str[i]);
+			var chld = setTag(str[i]);				// parse children
+			tg.appendChild(chld);
+			i++;
+		}
+									// console.log('after: i='+ i+'  tag=', tg);
+	}
+
+return tg;
+}
+
+
+</script>
+
+</body></html>
+
+
